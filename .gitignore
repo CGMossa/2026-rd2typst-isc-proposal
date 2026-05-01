@@ -18,6 +18,3 @@ vignettes/*.pdf
 *.pdf
 
 /.quarto/
-proposal/*_files/
-
-**/*.quarto_ipynb
