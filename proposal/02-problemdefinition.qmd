@@ -119,7 +119,11 @@ both independently testable and paving the way for future improvements.
 
 The `Rd2typst` converter described in this proposal is not hypothetical.
 A working implementation exists at `src/library/tools/R/Rd2typst.R` in
-the author's r-source fork. It handles the full set of Rd block and
+the author's r-source fork. The proof-of-concept files (the converter,
+the shared parser, the test suite, and the benchmark harness) are
+mirrored in this proposal repository at
+https://github.com/CGMossa/2026-rd2typst-isc-proposal/tree/main/code .
+It handles the full set of Rd block and
 inline tags: `\itemize`, `\enumerate`, `\describe`, `\tabular`,
 `\figure`, `\eqn`/`\deqn`, `\if{typst}{...}` conditionals,
 `\code`/`\verb`/`\preformatted`, all link variants (`\link`,
