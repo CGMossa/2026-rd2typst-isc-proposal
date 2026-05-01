@@ -164,9 +164,11 @@ focused, pragmatic step toward that goal.
 
 ### Community contributions
 
-All code developed under this grant will be contributed to r-source
-under R's standard GPL-2 license, or published on CRAN under an open
-license if the r-source patch is deferred. This ensures any R developer
-can use and improve the Typst backend, the implementation can be
-maintained by R-core as part of the standard tools package, and the work
-is not locked to a single maintainer or organization.
+The `rd2typst` CRAN package will be published under the MIT license,
+so any community member can inherit, fork, fold into their own
+package, or otherwise build on this work without friction. Code that
+lands in r-source follows R's standard GPL-2 license. Either way, the
+implementation is openly available: any R developer can use and
+improve the Typst backend, the work is not locked to a single
+maintainer or organization, and the patch path and the CRAN-package
+path both produce a permanent open-source artifact for the community.
