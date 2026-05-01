@@ -2358,6 +2358,11 @@ follow from solving the problem.
 Include concrete actions you will take and estimated timeline.
 -->
 <p>We propose to complete the <code>Rd2typst</code> converter, integrate it as a first-class backend in <code>tools::Rd2pdf</code>, and prepare it for upstream submission to R-core. Work is structured as four milestones over approximately 6 to 12 months. Each milestone delivers standalone value. Together they produce a fully functional, Comprehensive R Archive Network (CRAN)-compatible alternative to the LaTeX PDF rendering pipeline, a Markdown export path for LLM consumption, and a compiled-language foundation for future performance.</p>
+<p><code>R CMD</code> already ships a small family of Rd converters:</p>
+<pre><code>Rdconv     Convert Rd format to various other formats
+Rd2pdf     Convert Rd format to PDF
+Rd2txt     Convert Rd format to pretty text</code></pre>
+<p>This proposal adds two more: <strong><code>Rd2typst</code></strong> (or <strong><code>Rd2typ</code></strong> for alignment with the <code>Rd2pdf</code> / <code>Rd2txt</code> naming convention; final name to be agreed with R-core) and <strong><code>Rd2md</code></strong>. Both fit naturally into the existing tooling surface and do not require new R CMD entry points beyond the established pattern.</p>
 </section>
 <section id="detail" class="level2">
 <h2 class="anchored" data-anchor-id="detail">Detail</h2>
