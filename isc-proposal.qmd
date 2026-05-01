@@ -3,8 +3,11 @@ title: "Rd2typst: Modern PDF rendering for R help files using Typst"
 author:
   - name: Mossa Merhi Reimert
     orcid: 0009-0007-9297-1523
+    roles:
+      - "Senior Scientific Software Engineer"
     affiliations:
       - "A2-AI"
+      - "RSMF: Enabling the Next Generation of Contributors to R"
 
 date: today
 date-format: iso
@@ -18,6 +21,7 @@ format:
 bibliography: references.bib
 ---
 
+**Proposal repository:** <https://github.com/cgmossa/2026-rd2typst-isc-proposal>
 
 {{< include proposal/00-exec-summary.qmd >}}
 

@@ -17,10 +17,16 @@ are proposed.
 Mossa Merhi Reimert ([`github/CGMossa`](https://github.com/CGMossa/),
 ORCID [0009-0007-9297-1523](https://orcid.org/0009-0007-9297-1523),
 site: [ministats.dev](https://ministats.dev)).
+Senior Scientific Software Engineer at A2-AI.
 Core extendr maintainer, co-author of the `extendr` JOSS paper
 [@Reimert2024], and author of the `Rd2typst` proof-of-concept.
 Mossa will perform all development work.
-Affiliation: A2-AI.
+
+**About me.** Mossa is a member of
+[RSMF: Enabling the Next Generation of Contributors to R](https://www.heatherturner.net/posts/rsmf/),
+the contributor mentorship initiative led by Heather Turner.
+This membership reflects a sustained commitment to R's open-source
+infrastructure and contributor community.
 
 ```{=html}
 <!--
@@ -33,10 +39,10 @@ to the project.
 
 ## Prior ISC funding
 
-Mossa received an ISC grant for the extendr OOP project (vctrs/S3, S7,
+Mossa received an ISC grant for the extendr Object-Oriented Programming (OOP) project (vctrs/S3, S7,
 and R6 support for extendr bindings). All deliverables promised in that
 proposal, including work beyond what was directly funded, are now in
-production in **miniextendr** (a separate package). They are currently
+production in **[miniextendr](https://a2-ai.github.io/miniextendr/)** (a separate package). They are currently
 undergoing user testing before being marshalled into extendr proper.
 No follow-up funding was requested in the interim. The intent was to
 complete the full extendr OOP proposal before returning to the ISC.
