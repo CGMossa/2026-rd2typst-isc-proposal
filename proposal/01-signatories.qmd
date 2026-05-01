@@ -22,7 +22,9 @@ Core extendr maintainer, co-author of the `extendr` JOSS paper
 [@Reimert2024], and author of the `Rd2typst` proof-of-concept.
 Mossa will perform all development work.
 
-**About me.** Mossa is a member of
+**About me.** Mossa holds a PhD in Veterinary Epidemiology and is the
+maintainer of [extendr](https://extendr.rs), the Rust-to-R bindings
+project. He is a member of
 [RSMF: Enabling the Next Generation of Contributors to R](https://www.heatherturner.net/posts/rsmf/),
 the contributor mentorship initiative led by Heather Turner.
 This membership reflects a sustained commitment to R's open-source
