@@ -16,7 +16,7 @@ We propose to complete the `Rd2typst` converter, integrate it as a
 first-class backend in `tools::Rd2pdf`, and prepare it for upstream
 submission to R-core. Work is structured as four milestones over
 approximately 6 to 12 months. Each milestone delivers standalone value.
-Together they produce a fully functional, CRAN-compatible alternative to
+Together they produce a fully functional, Comprehensive R Archive Network (CRAN)-compatible alternative to
 the LaTeX PDF rendering pipeline, a Markdown export path for LLM
 consumption, and a compiled-language foundation for future performance.
 
@@ -38,9 +38,10 @@ tools package (base R)
 └── tests/                  : cross-platform CI for both engines  [Milestone 2]
 ```
 
+<!-- Source commits: e2e8480a29, ea2f24352b, 2e9789d759 -->
 ### What is already done
 
-Commits `e2e8480a29`, `ea2f24352b`, and `2e9789d759` cover:
+The existing implementation covers:
 
 -   Rd-to-Typst converter handling all standard Rd tags (inline markup,
     lists, tables, figures, links, URLs, code blocks, math, conditionals)
@@ -75,7 +76,8 @@ used by both the LaTeX and Typst converters.
 
 ### Milestone 1: CRAN-wide validation
 
-**Objective:** Run `Rd2typst` against all of CRAN (~6,000 packages).
+**Objective:** Run `Rd2typst` against all of CRAN
+([23,734 packages as of writing](https://cran.r-project.org/web/packages/)).
 Identify and fix failures. The current implementation passes the 14 base
 R packages. CRAN is the next scale up.
 
@@ -100,7 +102,7 @@ corpus.
 6.  **Public dashboard:** Publish a CRAN-wide pass-rate report. Format:
     a static page or GitHub Gist updated with each run.
 7.  **Updated benchmark:** Extend the existing benchmark beyond base R
-    to a broader CRAN sample.
+    to the full CRAN corpus.
 
 **Deliverables:**
 
@@ -109,7 +111,7 @@ corpus.
 -   Expanded test suite (at least 50 test cases) covering edge cases
     found in the wild
 -   Public CRAN-wide pass-rate dashboard or report
--   Updated benchmark report across a broader CRAN sample
+-   Updated benchmark report across the full CRAN corpus
 -   Blog post 1 on R Consortium blog
 
 M1 is also a prerequisite for any future `R CMD Rd2html --backend=typst`
@@ -153,7 +155,7 @@ out of the box with no configuration and no TeX Live installation.
     Verify `R CMD Rd2pdf --backend=typst` produces a valid PDF on each
     platform without a TeX installation.
 6.  **`R CMD check` hook:** Investigate exposing the backend choice to
-    `R CMD check --as-cran` via `_R_CHECK_RD_BACKEND_`, so CI runs can
+    `R CMD check --as-cran` via `_R_CHECK_RD_BACKEND_`, so Continuous Integration (CI) runs can
     opt into the LaTeX-free check path.
 7.  **r-source patch:** Produce a clean patch against r-devel. Follow
     R's coding conventions. Include `NEWS` entry, updated
@@ -180,7 +182,7 @@ foundation.
 
 **Objective:** Add `R CMD Rdconv -t md`. Deliver a Markdown export of
 R help pages, ready for LLM context windows, retrieval-augmented
-generation, and documentation MCP servers.
+generation, and documentation Model Context Protocol (MCP) servers.
 
 **Why this matters.** R's documentation system was built for human
 readers. The next generation of R users includes LLMs: Claude, Codex,
@@ -190,7 +192,7 @@ universal format for feeding documentation to these models. An
 export of its help pages.
 
 Use cases:
--   Retrieval-augmented generation (RAG) over CRAN documentation
+-   Retrieval-Augmented Generation (RAG) over CRAN documentation
 -   System-prompt context for coding assistants
 -   Training data curation
 -   Documentation MCP servers that serve live package help
@@ -212,9 +214,6 @@ Markdown emitter fits in approximately 300 to 400 lines of R.
     via `RdConv2.R`, matching the pattern used for `typst`.
 3.  **Test suite:** At least 20 test cases covering the same construct
     categories as the Typst test suite.
-4.  **LLM context-window validation:** Verify that the Markdown output
-    for a representative help page parses correctly in a context window
-    (no encoding artifacts, no broken structure).
 
 **Deliverables:**
 
@@ -265,9 +264,13 @@ through 3 are complete.
 
 ## Assumptions
 
-1.  **Typst binary stability:** The Typst markup language has reached a
-    stable point (v0.11+). We assume no breaking syntax changes during
-    the project. The binary distribution model is stable.
+1.  **Typst feature stability**: The Typst features required for R
+    documentation rendering have already landed and are unlikely to
+    change for the foreseeable future. The Typst project has signaled
+    its intent to avoid breaking changes (see
+    <https://laurmaedje.github.io/posts/evolving-typst/>), though no
+    formal stability promise is possible at this stage. We accept this
+    as a calculated risk.
 2.  **R-core engagement:** Milestone 2 depends on R-core willingness to
     review and ultimately merge the patch. We will engage early (start
     of Month 3) to surface any concerns before final implementation.
@@ -318,3 +321,8 @@ of upstream, Milestone 4 ships as a standalone CRAN package instead.
 5.  **Timeline slippage:** Milestones 1 to 2 exceed budget.
     Recovery: Milestone 3 and Milestone 4 are independent and can be
     deferred. Milestones 1 and 2 deliver the core technical value.
+
+Across all failure modes, one outcome is guaranteed: shipping Rd2typst
+as a standalone CRAN package. The package form delivers value to R users
+regardless of whether the r-source patch is accepted. The patch path is
+the preferred route, but it is not the only route to delivery.

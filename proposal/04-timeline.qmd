@@ -32,7 +32,7 @@ already exist. The start-up phase is minimal.
 **Initial work (Week 1):**
 
 -   Confirm Typst version to target (currently at least 0.11)
--   Identify CRAN packages for the Milestone 1 validation corpus
+-   Set up the Milestone 1 validation pipeline: the corpus is the full Comprehensive R Archive Network (CRAN) package set, not a sample.
 -   Open r-devel discussion thread to gauge R-core interest early
 
 The project can begin immediately upon funding approval.
@@ -81,7 +81,7 @@ approval to final milestone delivery.
     Bundle Inconsolata and any required Typst packages into
     `share/typst/` (approximately 1 week). Verify TeX-Live-free
     operation on minimal Docker images (approximately 1 week).
-    Cross-platform CI matrix (approximately 1 week). Produce clean
+    Cross-platform Continuous Integration (CI) matrix (approximately 1 week). Produce clean
     r-source patch against r-devel including `NEWS` and `man` updates
     (approximately 2 weeks). R-core engagement and feedback integration
     (approximately 2 weeks). Blog post 2 (approximately 0.5 weeks).

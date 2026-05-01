@@ -33,7 +33,7 @@ It has no runtime dependencies beyond the binary itself.
 
 Typst's package ecosystem uses permissive licenses. R-core can embed a
 full Typst template, fonts, and any required Typst packages directly into
-r-source. There is no CTAN-equivalent fragility. There is no user-side
+r-source. There is no Comprehensive TeX Archive Network (CTAN)-equivalent fragility. There is no user-side
 configuration. R ships with everything it needs.
 
 Typst now offers modern HTML output with native typesetting of equations
@@ -41,13 +41,17 @@ and bibliographies. The R community pioneered reproducible scientific
 writing: Sweave, knitr, R Markdown, Quarto. Adopting Typst as the
 documentation engine is the next generation of that legacy.
 
-## The LaTeX dependency is painful
+Typst currently offers experimental HTML support. It will be the engine
+for modern HTML output of R documentation in the future.
 
-R's documentation system is one of its great strengths: every function
-ships with structured, cross-referenced help that can be rendered to
-HTML, plain text, or PDF. The PDF path, `tools::Rd2pdf`, has served the
-community well for decades. It relies entirely on LaTeX, a dependency
-that has grown increasingly painful.
+## The LaTeX dependency is cumbersome for end-users
+
+R's documentation system is one of its great strengths. Every function
+ships with structured, cross-referenced help. Help can be rendered to
+HTML, plain text, or PDF. The PDF path is `tools::Rd2pdf`. It relies
+entirely on LaTeX. This dependency is cumbersome for everyone in the
+chain: package repositories like Bioconductor, R-package developers,
+Continuous Integration (CI) systems, and end users.
 
 Generating PDF documentation from an R package requires a working LaTeX
 installation. TeX Live (the standard distribution on Linux and macOS) is
@@ -61,7 +65,7 @@ introduces its own bootstrap step and can fail when proxy settings,
 filesystem permissions, or network access are restricted.
 
 CTAN package version drift is a recurring source of `R CMD check`
-failures. When a CRAN package depends on LaTeX packages that ship in
+failures. When a Comprehensive R Archive Network (CRAN) package depends on LaTeX packages that ship in
 different versions across distributions, check results become
 non-reproducible.
 
@@ -82,7 +86,7 @@ slowest step of the check pipeline. On CRAN's build infrastructure this
 cost is multiplied across thousands of packages.
 
 Typst compiles in a single pass with incremental re-compilation support.
-The benchmark in `code/typst-benchmark.R` measures the Typst backend at
+An internal benchmark measures the Typst backend at
 **1.9x faster end-to-end across 257 help pages** drawn from the base R
 packages, versus the `Rd2latex` + `pdflatex` pipeline. The speedup comes
 from the typesetting step itself: Typst compiles a multi-hundred-page
@@ -92,6 +96,14 @@ Speed is a useful side effect of single-pass compilation. The primary
 value of this work is infrastructure: a documentation pipeline that does
 not rely on a multi-gigabyte external toolchain, does not break when
 CTAN packages drift, and produces reproducible output across platforms.
+
+The Rd2typst converter is currently written in R. Further speedup is
+attainable. Milestone 4 proposes a compiled-language port if performance
+becomes a priority. Infrastructure robustness is the overall priority
+of this proposal.
+
+Typst could be added to Rtools, so Windows users would not need to
+install it separately.
 
 ## The existing path has no competition
 
@@ -129,7 +141,7 @@ markup specification, an active package ecosystem, and growing adoption
 in academic writing. It ships as a single static binary for Linux,
 macOS, and Windows.
 
-The key gap is not the Rd to Typst conversion or the CLI integration.
+The key gap is not the Rd to Typst conversion or the Command-Line Interface (CLI) integration.
 Both already exist. The gap is production hardening: validating against
 the wider CRAN corpus, handling Typst binary distribution across
 platforms in a CRAN-acceptable way, polishing the output layout to match
