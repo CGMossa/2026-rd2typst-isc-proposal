@@ -18,3 +18,9 @@ vignettes/*.pdf
 *.pdf
 
 /.quarto/
+
+**/*.quarto_ipynb
+
+# Rendered Quarto support files
+*_files/
+**/_files/
