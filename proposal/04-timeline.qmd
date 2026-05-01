@@ -64,10 +64,11 @@ approval to final milestone delivery.
     `.pkg2typst()` document assembler with table of contents and index
     (approximately 2 weeks), S4/R5 method documentation verification
     (approximately 1 week), expanded test suite to at least 50 cases
-    (approximately 1 week), public pass-rate dashboard and updated
-    benchmark report (approximately 1 week).
--   **Payment trigger:** CRAN-wide pass-rate report published.
-    Test suite at 50+ cases. Blog post 1 submitted to R Consortium.
+    (approximately 1 week), updated benchmark report
+    (approximately 1 week).
+-   **Payment trigger:** CRAN-wide validation run completed and bug
+    fixes merged. Test suite at 50+ cases. Blog post 1 submitted to
+    R Consortium.
 
 ---
 
@@ -172,10 +173,10 @@ Merhi Reimert. No indirect costs, travel, or hardware are included.
 
 -   **Deliverables:** Updated `Rd2typst.R` with CRAN validation fixes.
     `.pkg2typst()` assembler. Expanded test suite (at least 50 cases).
-    Public CRAN-wide pass-rate dashboard. Updated benchmark report.
-    Blog post 1.
--   **Payment trigger:** Pass-rate report published. Test suite at 50+
-    cases. Blog post 1 submitted to R Consortium.
+    Updated benchmark report. Blog post 1.
+-   **Payment trigger:** CRAN-wide validation run completed and fixes
+    merged. Test suite at 50+ cases. Blog post 1 submitted to
+    R Consortium.
 
 **Milestone 2: Production integration: Rd2typst in `R CMD Rd2pdf`, embedded in r-source: \$2,500**
 

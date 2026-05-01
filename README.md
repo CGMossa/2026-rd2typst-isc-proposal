@@ -29,8 +29,7 @@ funds four milestones:
 
 1.  **Milestone 1 - CRAN-wide validation (\$2,500):** Run `Rd2typst`
     against all of CRAN ([23,734 packages as of writing](https://cran.r-project.org/web/packages/)).
-    Fix failures. Publish a pass-rate dashboard. Expand the benchmark
-    corpus.
+    Fix failures. Expand the benchmark corpus.
 2.  **Milestone 2 - Production integration: Rd2typst in `R CMD Rd2pdf`,
     embedded in r-source (\$2,500):** Ship a self-contained `Rd.typ`
     template with embedded fonts and Typst packages inside `share/typst/`

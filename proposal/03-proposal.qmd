@@ -141,9 +141,7 @@ corpus.
 5.  **Package index assembler:** Implement `.pkg2typst()` to concatenate
     all help pages into a single `.typ` file with a table of contents
     and index.
-6.  **Public dashboard:** Publish a CRAN-wide pass-rate report. Format:
-    a static page or GitHub Gist updated with each run.
-7.  **Updated benchmark:** Extend the existing benchmark beyond base R
+6.  **Updated benchmark:** Extend the existing benchmark beyond base R
     to the full CRAN corpus.
 
 **Deliverables:**
@@ -152,7 +150,6 @@ corpus.
 -   `.pkg2typst()` function assembling a complete per-package Typst document
 -   Expanded test suite (at least 50 test cases) covering edge cases
     found in the wild
--   Public CRAN-wide pass-rate dashboard or report
 -   Updated benchmark report across the full CRAN corpus
 -   Blog post 1 on R Consortium blog
 

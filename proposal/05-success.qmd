@@ -37,7 +37,6 @@ following concrete, measurable outcomes.
 
 **Documentation:**
 
--   Public CRAN-wide pass-rate dashboard or report
 -   Updated benchmark extending the existing 257-page, 1.9x-faster
     baseline to the full CRAN corpus
 
