@@ -1,0 +1,36 @@
+---
+title: "Rd2typst: Modern PDF rendering for R help files using Typst"
+author:
+  - name: Mossa Merhi Reimert
+    orcid: 0009-0007-9297-1523
+    affiliations:
+      - "A2-AI"
+
+date: today
+date-format: iso
+format:
+  html:
+    embed-resources: true
+  hikmah-pdf:
+    geometry:
+      - left=1.25in
+      - right=1.25in
+bibliography: references.bib
+---
+
+
+{{< include proposal/00-exec-summary.qmd >}}
+
+{{< include proposal/01-signatories.qmd >}}
+
+{{< include proposal/02-problemdefinition.qmd >}}
+
+{{< include proposal/03-proposal.qmd >}}
+
+{{< include proposal/04-timeline.qmd >}}
+
+{{< include proposal/05-success.qmd >}}
+
+# References
+::: refs
+:::

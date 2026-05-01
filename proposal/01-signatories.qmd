@@ -1,0 +1,43 @@
+# Signatories
+
+```{=html}
+<!--
+This section provides the ISC with a view of the support received from
+the community for a proposal. Acceptance isn't predicated on
+popularity but community acceptance is important. Willingness to
+accept outside input is also a good marker for project delivery.
+
+An optional section would be for R-Core signatories where changes to R
+are proposed.
+-->
+```
+
+## Project team
+
+Mossa Merhi Reimert ([`github/CGMossa`](https://github.com/CGMossa/),
+ORCID [0009-0007-9297-1523](https://orcid.org/0009-0007-9297-1523),
+site: [ministats.dev](https://ministats.dev)).
+Core extendr maintainer, co-author of the `extendr` JOSS paper
+[@Reimert2024], and author of the `Rd2typst` proof-of-concept.
+Mossa will perform all development work.
+Affiliation: A2-AI.
+
+```{=html}
+<!--
+Who are the people responsible for actually delivering the project if
+the proposal gets accepted and are already signed up and rearing to
+go? Briefly describe all participants and the skills they will bring
+to the project.
+-->
+```
+
+## Prior ISC funding
+
+Mossa received an ISC grant for the extendr OOP project (vctrs/S3, S7,
+and R6 support for extendr bindings). All deliverables promised in that
+proposal, including work beyond what was directly funded, are now in
+production in **miniextendr** (a separate package). They are currently
+undergoing user testing before being marshalled into extendr proper.
+No follow-up funding was requested in the interim. The intent was to
+complete the full extendr OOP proposal before returning to the ISC.
+

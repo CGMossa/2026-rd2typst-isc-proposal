@@ -1,0 +1,137 @@
+---
+bibliography: references.bib
+---
+
+# The Problem
+
+```{=html}
+<!--
+Outlining the issue / weak point / problem to be solved by this
+proposal. This should be a compelling section that sets the reader up
+for the next section - the proposed solution!
+
+It is important to cover:
+
+ - [x] What the problem is
+ - [x] Who it affects
+ - [x] Why is it a problem
+ - [x] What will solving the problem enable (why should it be solved)
+ - [x] Brief summary of existing work and previous attempts (e.g., relevant R packages)
+ - [ ] If proposing changes to R itself: letter of support from R Core member
+-->
+```
+
+## Typst is the right foundation
+
+Typst is a modern typesetting engine. It is more than a LaTeX replacement.
+
+The Typst project built its own infrastructure end to end: their own PDF
+renderer, their own SVG renderer, their own font handling, and their own
+package system. This means the Typst toolchain has very few moving parts.
+It ships as a single static binary. It requires no external system packages.
+It has no runtime dependencies beyond the binary itself.
+
+Typst's package ecosystem uses permissive licenses. R-core can embed a
+full Typst template, fonts, and any required Typst packages directly into
+r-source. There is no CTAN-equivalent fragility. There is no user-side
+configuration. R ships with everything it needs.
+
+Typst now offers modern HTML output with native typesetting of equations
+and bibliographies. The R community pioneered reproducible scientific
+writing: Sweave, knitr, R Markdown, Quarto. Adopting Typst as the
+documentation engine is the next generation of that legacy.
+
+## The LaTeX dependency is painful
+
+R's documentation system is one of its great strengths: every function
+ships with structured, cross-referenced help that can be rendered to
+HTML, plain text, or PDF. The PDF path, `tools::Rd2pdf`, has served the
+community well for decades. It relies entirely on LaTeX, a dependency
+that has grown increasingly painful.
+
+Generating PDF documentation from an R package requires a working LaTeX
+installation. TeX Live (the standard distribution on Linux and macOS) is
+1 to 4 GB. MiKTeX on Windows adds its own installer and
+package-management quirks. On a fresh Ubuntu CI runner, installing the
+minimal `texlive-latex-base` plus the packages used by `Rd.sty` takes 30
+to 60 seconds and 500 MB or more.
+
+The `tinytex` package [@tinytex2019] provides a leaner alternative. It
+introduces its own bootstrap step and can fail when proxy settings,
+filesystem permissions, or network access are restricted.
+
+CTAN package version drift is a recurring source of `R CMD check`
+failures. When a CRAN package depends on LaTeX packages that ship in
+different versions across distributions, check results become
+non-reproducible.
+
+**Who is affected.** Every R developer who runs `R CMD check --as-cran`.
+Every CRAN submission. Every package that generates PDF vignettes or
+reference manuals. Every CI/CD pipeline that produces documentation
+artifacts. Windows developers without MiKTeX are blocked from producing
+PDF manuals without third-party tooling. Minimal Docker images and
+serverless CI runners often lack headroom for a TeX distribution.
+
+## LaTeX compilation is slow
+
+A typical `R CMD check` run on a medium-sized package compiles LaTeX
+twice, plus a `makeindex` pass, to resolve cross-references and build
+the index. For packages with large manuals (50 or more help pages) this
+can account for 10 to 30 seconds of wall-clock time. It is often the
+slowest step of the check pipeline. On CRAN's build infrastructure this
+cost is multiplied across thousands of packages.
+
+Typst compiles in a single pass with incremental re-compilation support.
+The benchmark in `code/typst-benchmark.R` measures the Typst backend at
+**1.9x faster end-to-end across 257 help pages** drawn from the base R
+packages, versus the `Rd2latex` + `pdflatex` pipeline. The speedup comes
+from the typesetting step itself: Typst compiles a multi-hundred-page
+document in one pass with no auxiliary file reruns.
+
+Speed is a useful side effect of single-pass compilation. The primary
+value of this work is infrastructure: a documentation pipeline that does
+not rely on a multi-gigabyte external toolchain, does not break when
+CTAN packages drift, and produces reproducible output across platforms.
+
+## The existing path has no competition
+
+Because LaTeX is the only supported PDF backend, the Rd pipeline has
+evolved around LaTeX's idioms and limitations: `Rd.sty`, manual index
+handling, separate `makeindex` invocation. The absence of an alternative
+backend means there is no forcing function to keep the Rd-to-PDF path
+lean, portable, or testable in isolation from a TeX installation. A Typst
+backend decouples the conversion step from the typesetting step, making
+both independently testable and paving the way for future improvements.
+
+## Prior work and existing implementation
+
+The `Rd2typst` converter described in this proposal is not hypothetical.
+A working implementation exists at `src/library/tools/R/Rd2typst.R` in
+the author's r-source fork. It handles the full set of Rd block and
+inline tags: `\itemize`, `\enumerate`, `\describe`, `\tabular`,
+`\figure`, `\eqn`/`\deqn`, `\if{typst}{...}` conditionals,
+`\code`/`\verb`/`\preformatted`, all link variants (`\link`,
+`\linkS4class`, `\href`, `\url`), and concordance tracking.
+
+The Typst-specific details are all in place: inline code via `#raw()`
+with full string escaping, fenced ` ```r ` blocks for syntax-highlighted
+code, native `#table()` rendering, definition lists for `\arguments` and
+`\value`, escaping of every Typst special character, and centered display
+equations via `block: true`. The toolchain is wired through
+`R CMD Rdconv -t typst`, `R CMD Rd2pdf --backend=typst`, and a
+`typst_compile()` utility. The `"typst"` format is registered as a
+recognized Rd conditional format. A 21-case test suite verifies each
+major construct. The converter compiles all 14 base R packages end-to-end
+without errors.
+
+The Typst project [@typst] has reached version 0.13 (2025) with a stable
+markup specification, an active package ecosystem, and growing adoption
+in academic writing. It ships as a single static binary for Linux,
+macOS, and Windows.
+
+The key gap is not the Rd to Typst conversion or the CLI integration.
+Both already exist. The gap is production hardening: validating against
+the wider CRAN corpus, handling Typst binary distribution across
+platforms in a CRAN-acceptable way, polishing the output layout to match
+R's documentation conventions, embedding a fully self-contained template
+into r-source, and shepherding the patch through R-core review.

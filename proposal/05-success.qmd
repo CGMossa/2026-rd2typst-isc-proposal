@@ -1,0 +1,167 @@
+# Success
+
+```{=html}
+<!--
+Projects should have a definition of done that is measurable, and a
+thorough understanding going in of what the risks are to delivery
+-->
+```
+
+The project will be considered complete when all milestones deliver the
+following concrete, measurable outcomes.
+
+### Milestone 1: CRAN-wide validation
+
+**Technical deliverables:**
+
+-   `Rd2typst()` continues to produce valid, compilable Typst markup
+    for all 14 base R packages (regression-tested baseline: all 14
+    already compile in the current implementation)
+-   `Rd2typst()` produces valid output for at least 95% of CRAN
+    packages (remaining failures documented as known limitations)
+-   `.pkg2typst()` assembler produces a complete `.typ` document with
+    table of contents and alphabetical index
+-   `\eqn` and `\deqn` render in Typst math mode for common LaTeX math
+    constructs (superscripts, subscripts, Greek letters, fractions,
+    `\sum`, `\prod`)
+-   All 21 existing test cases continue to pass; at least 50 total test
+    cases
+
+**Documentation:**
+
+-   Public CRAN-wide pass-rate dashboard or report
+-   Updated benchmark extending the existing 257-page, 1.9x-faster
+    baseline to a broader CRAN-package corpus
+
+### Milestone 2: Production-ready `R CMD Rd2pdf --backend=typst` + r-source upstream
+
+**Technical deliverables:**
+
+-   `R CMD Rd2pdf --backend=typst` produces a PDF manual on Windows
+    (R at least 4.4), macOS (arm64 and x86-64), and Linux (Ubuntu 22.04
+    and 24.04) without requiring a TeX Live installation
+-   `typst_binary()` locates the binary from PATH, an `R_TYPST_BIN`
+    vendored path, or a user cache. Opt-in download works on all three
+    platforms.
+-   Self-contained font and Typst-package handling (no `--font-path` to
+    TeX Live). Verified on a TeX-Live-free Docker image.
+-   `Rd.typ` stylesheet produces output visually comparable to the
+    LaTeX `Rd.sty` stylesheet: correct heading hierarchy, monospace
+    code, argument definition lists, page headers, and index
+-   At least 5 CRAN packages (covering a range of sizes and Rd
+    complexity) produce equivalent page counts (within 10%) between the
+    LaTeX and Typst backends
+-   CI matrix (GitHub Actions) runs both backends on Windows, macOS,
+    and Linux for the test package corpus and remains green
+-   r-source patch submitted to r-devel or R Bugzilla
+
+**Documentation:**
+
+-   Updated `man/Rd2pdf.Rd` describing the `--backend` argument
+-   `NEWS` entry for the new option
+-   Blog post 2 published on R Consortium blog
+
+### Milestone 3: Rd2md for LLM consumption
+
+**Technical deliverables:**
+
+-   `Rd2md()` converter produces valid Markdown for all 14 base R
+    packages
+-   `R CMD Rdconv -t md` wired through `RdConv2.R`
+-   At least 20 test cases
+-   Output validates against an LLM context-window test: a
+    representative help page parses without encoding artifacts or broken
+    structure in a standard context window
+
+**Documentation:**
+
+-   Blog post 3 published on R Consortium blog
+
+### Milestone 4: Rust or C port (stretch goal)
+
+-   Working port produces output equivalent to the R implementation for
+    the base R corpus
+-   Benchmarks showing compiled vs. R-side parsing performance
+-   Packaging plan documented: r-source patch or standalone CRAN
+    package, depending on R-core's Rust/Cargo stance at the time
+
+### Overall project completion
+
+The project will be considered complete when:
+
+-   `Rd2typst()` is feature-complete and well-tested against the full
+    CRAN corpus
+-   `R CMD Rd2pdf --backend=typst` works on all three major platforms
+    without a TeX Live or MiKTeX installation, with an embedded
+    self-contained template
+-   An r-source patch has been submitted for R-core review
+-   `R CMD Rdconv -t md` is implemented and tested
+-   Community outreach has been completed (blog posts, announcement,
+    talk)
+
+## Measuring success
+
+| Metric                               | Target                | Measurement                              |
+|--------------------------------------|----------------------|------------------------------------------|
+| All 14 base R packages compile       | 0 errors             | Already met; CI guard                    |
+| CRAN-wide pass rate                  | at least 95%         | Automated CRAN validation run            |
+| Test cases (Rd2typst)                | at least 50          | Test file                                |
+| Platform support                     | Win / macOS / Linux  | CI matrix                                |
+| Embedded template self-contained     | Works on TeX-Live-free Docker image | CI on minimal images      |
+| CRAN packages validated end-to-end   | at least 5           | Validation report                        |
+| End-to-end speedup vs. LaTeX         | at least 1.9x        | Benchmark report (baseline already met)  |
+| Rd2md output validates               | Parses in LLM context window without errors | Manual + automated test |
+| Blog posts                           | 3 (4 if M4 complete) | R Consortium blog                        |
+| r-source patch submitted             | Yes                  | r-devel post or Bugzilla ticket          |
+| Rust/C port completed                | Optional             | Completed if scope allows                |
+
+## Future work
+
+This project lays the groundwork for further improvements to R's
+documentation toolchain.
+
+**Short-term extensions (community-driven):**
+
+-   **Typst package ecosystem:** Once the baseline is established, the
+    `Rd.typ` stylesheet can be published as a Typst package, allowing
+    package authors to customize their PDF documentation with Typst's
+    theme system.
+-   **Math improvements:** A LaTeX-to-Typst math transpiler (or use of
+    an existing tool such as pandoc) could improve math rendering for
+    packages that use complex LaTeX math in `\eqn`/`\deqn`.
+-   **`R CMD Rd2html --backend=typst`:** M1 and M2 are the necessary
+    foundation for a Typst-based HTML backend for R help pages. Typst's
+    HTML output supports native typesetting of equations and
+    bibliographies. The R community pioneered reproducible scientific
+    writing through Sweave, knitr, R Markdown, and Quarto. A
+    Typst-based HTML backend is the natural next step in that legacy.
+    M1 delivers a CRAN-validated converter. M2 delivers the embedded
+    template and binary management. Anyone, the author or another
+    contributor, can build the HTML backend on this foundation.
+
+**Medium-term opportunities (potential future grants):**
+
+-   **Default backend switch:** If the Typst backend achieves full
+    parity with LaTeX output and R-core is satisfied, a proposal to make
+    `--backend=typst` the default could substantially reduce the
+    dependency burden for the R ecosystem.
+-   **Vignette rendering:** Extending the Typst path to vignettes would
+    further reduce the LaTeX dependency surface.
+-   **R on minimal platforms:** Removing the hard LaTeX dependency from
+    `R CMD check` would make it practical to run full CRAN checks in
+    environments like AWS Lambda, GitHub Codespaces free tier, and
+    minimal container images.
+
+**Long-term vision.** The ultimate goal is for R's documentation
+toolchain to be fast, dependency-light, and accessible to developers on
+any platform without a multi-GB TeX installation. This project takes a
+focused, pragmatic step toward that goal.
+
+### Community contributions
+
+All code developed under this grant will be contributed to r-source
+under R's standard GPL-2 license, or published on CRAN under an open
+license if the r-source patch is deferred. This ensures any R developer
+can use and improve the Typst backend, the implementation can be
+maintained by R-core as part of the standard tools package, and the work
+is not locked to a single maintainer or organization.

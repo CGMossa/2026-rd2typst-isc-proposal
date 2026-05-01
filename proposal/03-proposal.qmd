@@ -1,0 +1,320 @@
+# The proposal
+
+```{=html}
+<!--
+How are you going to solve the problem? Include the concrete actions you
+will take and an estimated timeline. What are likely failure modes and
+how will you recover from them?
+
+This is where the proposal should be outlined.
+-->
+```
+
+## Overview
+
+We propose to complete the `Rd2typst` converter, integrate it as a
+first-class backend in `tools::Rd2pdf`, and prepare it for upstream
+submission to R-core. Work is structured as four milestones over
+approximately 6 to 12 months. Each milestone delivers standalone value.
+Together they produce a fully functional, CRAN-compatible alternative to
+the LaTeX PDF rendering pipeline, a Markdown export path for LLM
+consumption, and a compiled-language foundation for future performance.
+
+The high-level architecture is:
+
+```
+tools package (base R)
+├── Rd2typst()              : Rd -> Typst markup converter   [done; CRAN-wide hardening]
+├── Rd2md()                 : Rd -> Markdown converter       [Milestone 3]
+├── typst_compile()         : Typst CLI wrapper              [done; needs binary mgmt]
+├── R CMD Rdconv -t typst   : single-page Typst conversion   [done]
+├── R CMD Rdconv -t md      : single-page Markdown conv.     [Milestone 3]
+├── R CMD Rd2pdf            : orchestrator
+│   ├── --backend=latex     : existing LaTeX path (unchanged)
+│   └── --backend=typst     : Typst path                     [done; needs prod hardening]
+│       ├── typst_binary()  : locate / vendor / download typst  [Milestone 2]
+│       ├── Rd.typ          : embedded in share/typst/           [Milestone 2]
+│       └── typst compile   : single-pass PDF generation
+└── tests/                  : cross-platform CI for both engines  [Milestone 2]
+```
+
+### What is already done
+
+Commits `e2e8480a29`, `ea2f24352b`, and `2e9789d759` cover:
+
+-   Rd-to-Typst converter handling all standard Rd tags (inline markup,
+    lists, tables, figures, links, URLs, code blocks, math, conditionals)
+-   Toolchain integration: `R CMD Rdconv -t typst`, `R CMD Rd2pdf
+    --backend=typst`, and a `typst_compile()` wrapper in `utils.R`
+-   `"typst"` registered as a recognized Rd conditional format in
+    `RdConv2.R`, so `\if{typst}{...}` does not trigger `checkRd` warnings
+-   Inline code via `#raw("...")` with proper string escaping. Fenced
+    ` ```r ` blocks for syntax-highlighted code. Tables via `#table()`
+    with `[...]` content-mode cell wrapping. Definition lists for
+    `\arguments` and `\value`. Full escaping of every Typst special
+    character. Display equations via `block: true`. Nested-markup
+    stripping inside `\code`.
+-   Inconsolata set as the monospace font via `#show raw: set
+    text(font: "Inconsolata")` in `Rd2pdf.R`, with `--font-path` plumbed
+    through `typst_compile()` to TeX Live's OpenType directory
+-   Man pages: `Rd2HTML.Rd` updated to document `Rd2typst` alongside
+    other converters. New `typst_compile.Rd`. `RdUtils.Rd` documents
+    the `typst` format and `--backend=typst` option.
+-   21-case unit test suite covering smoke test on all base Rd pages,
+    plus structural output, inline markup, lists, tables, links,
+    conditionals, escaping, and dots handling
+-   All 14 base R packages compile end-to-end with the Typst backend
+-   Benchmark across 257 help pages: Typst pipeline **1.9x faster
+    end-to-end** than `Rd2latex` + `pdflatex`
+
+The RdConv2 refactoring (`code/RdConv2.R`) provides the shared parsing
+infrastructure (`RdTags`, `transformMethod`, `testRdConditional`, etc.)
+used by both the LaTeX and Typst converters.
+
+---
+
+### Milestone 1: CRAN-wide validation
+
+**Objective:** Run `Rd2typst` against all of CRAN (~6,000 packages).
+Identify and fix failures. The current implementation passes the 14 base
+R packages. CRAN is the next scale up.
+
+M1 is not a performance milestone. Performance optimization lives in M4.
+M1 is about establishing Rd2typst's robustness across the full CRAN
+corpus.
+
+**Implementation work:**
+
+1.  **CRAN-wide run:** Run `R CMD Rdconv -t typst` across the full CRAN
+    package corpus. Capture and triage failures by error type.
+2.  **Bug fixes:** Fix parser failures, malformed output, and unhandled
+    Rd macros found during the run.
+3.  **Expanded test corpus:** Add test cases for edge cases found in the
+    wild. Target at least 50 test cases total.
+4.  **Math rendering:** Improve `\eqn`/`\deqn` handling. Translate
+    common LaTeX math constructs to Typst's native math mode where
+    possible (subscripts, superscripts, Greek letters, fractions).
+5.  **Package index assembler:** Implement `.pkg2typst()` to concatenate
+    all help pages into a single `.typ` file with a table of contents
+    and index.
+6.  **Public dashboard:** Publish a CRAN-wide pass-rate report. Format:
+    a static page or GitHub Gist updated with each run.
+7.  **Updated benchmark:** Extend the existing benchmark beyond base R
+    to a broader CRAN sample.
+
+**Deliverables:**
+
+-   Updated `Rd2typst.R` with fixes from CRAN-wide testing
+-   `.pkg2typst()` function assembling a complete per-package Typst document
+-   Expanded test suite (at least 50 test cases) covering edge cases
+    found in the wild
+-   Public CRAN-wide pass-rate dashboard or report
+-   Updated benchmark report across a broader CRAN sample
+-   Blog post 1 on R Consortium blog
+
+M1 is also a prerequisite for any future `R CMD Rd2html --backend=typst`
+work. Without a CRAN-validated converter, an HTML backend cannot be
+built on top.
+
+---
+
+### Milestone 2: Production integration: Rd2typst in `R CMD Rd2pdf`, embedded in r-source
+
+**Objective:** Take the existing Rd2typst prototype to a
+cross-platform, CRAN-acceptable production path. Ship a fully
+self-contained Typst template embedded inside r-source. Integrate
+Rd2typst as a first-class backend in `R CMD Rd2pdf`. Submit the
+r-source patch.
+
+Because Typst packages are permissively licensed, R-core can embed
+the full template, fonts, and any required Typst packages directly into
+`share/typst/` in the r-source tree. Users get PDF documentation working
+out of the box with no configuration and no TeX Live installation.
+
+**Implementation work:**
+
+1.  **`typst_binary()` resolver:** Check for `typst` on PATH. Fall back
+    to a per-user cache directory. Honor an `R_TYPST_BIN` environment
+    variable for vendored binaries. Offer an opt-in auto-download of
+    the official release binary.
+2.  **Embedded Typst template:** Design `Rd.typ` to reproduce R's
+    reference manual conventions: serif body font, monospace code,
+    argument definition lists, page headers with package name, and an
+    index. Ship it in `share/typst/` of r-source.
+3.  **Embedded fonts:** Replace the current `--font-path` shortcut to
+    TeX Live's OpenType directory. Bundle Inconsolata (OFL-licensed) in
+    `share/typst/fonts/`. The result works on a system with no TeX
+    installation at all.
+4.  **Embedded Typst packages:** Identify any Typst packages required by
+    the template. Embed them in `share/typst/packages/`. Permissive
+    licenses make this straightforward.
+5.  **Cross-platform CI matrix:** GitHub Actions matrix covering
+    Windows, macOS, and Linux (Ubuntu 22.04 and 24.04), R at least 4.4.
+    Verify `R CMD Rd2pdf --backend=typst` produces a valid PDF on each
+    platform without a TeX installation.
+6.  **`R CMD check` hook:** Investigate exposing the backend choice to
+    `R CMD check --as-cran` via `_R_CHECK_RD_BACKEND_`, so CI runs can
+    opt into the LaTeX-free check path.
+7.  **r-source patch:** Produce a clean patch against r-devel. Follow
+    R's coding conventions. Include `NEWS` entry, updated
+    `man/Rd2pdf.Rd`, and updated `INSTALL` notes.
+
+**Deliverables:**
+
+-   `typst_binary()` and binary management infrastructure
+-   `Rd.typ` Typst stylesheet and embedded fonts in `share/typst/`
+-   TeX-Live-free operation verified on a minimal Docker image
+-   CI matrix (Windows, macOS, Linux) green
+-   r-source patch submitted to r-devel
+-   `NEWS` entry and updated man pages
+-   Blog post 2 on R Consortium blog
+
+Together with M1, M2 unlocks future `R CMD Rd2html --backend=typst`
+work. The embedded template and binary management are reusable. Anyone,
+the author or another contributor, can pick up the HTML backend on this
+foundation.
+
+---
+
+### Milestone 3: Rd2md for LLM consumption
+
+**Objective:** Add `R CMD Rdconv -t md`. Deliver a Markdown export of
+R help pages, ready for LLM context windows, retrieval-augmented
+generation, and documentation MCP servers.
+
+**Why this matters.** R's documentation system was built for human
+readers. The next generation of R users includes LLMs: Claude, Codex,
+Qwen Code, Llama, and other coding-assistant models. Markdown is the
+universal format for feeding documentation to these models. An
+`R CMD Rdconv -t md` path gives every CRAN package a clean Markdown
+export of its help pages.
+
+Use cases:
+-   Retrieval-augmented generation (RAG) over CRAN documentation
+-   System-prompt context for coding assistants
+-   Training data curation
+-   Documentation MCP servers that serve live package help
+
+**Why this is tractable.** The work done on `RdConv2.R` and
+`Rd2typst.R` already provides the parsing infrastructure. Adding a
+Markdown emitter is a retrofit. The Rd tag set is finite. A complete
+Markdown emitter fits in approximately 300 to 400 lines of R.
+
+**Implementation work:**
+
+1.  **`Rd2md.R` converter:** Implement the Markdown emitter. Handle all
+    standard Rd tags. Use fenced code blocks for `\preformatted` and
+    `\code`. Use GitHub-Flavored Markdown tables for `\tabular`. Use
+    definition lists or bold-label paragraphs for `\arguments` and
+    `\value`. Pass through `\eqn`/`\deqn` as LaTeX math (compatible
+    with MathJax and most LLM tokenizers).
+2.  **`R CMD Rdconv -t md`:** Wire the new converter into the toolchain
+    via `RdConv2.R`, matching the pattern used for `typst`.
+3.  **Test suite:** At least 20 test cases covering the same construct
+    categories as the Typst test suite.
+4.  **LLM context-window validation:** Verify that the Markdown output
+    for a representative help page parses correctly in a context window
+    (no encoding artifacts, no broken structure).
+
+**Deliverables:**
+
+-   `Rd2md.R` converter
+-   `R CMD Rdconv -t md` wired into the toolchain
+-   Test suite (at least 20 cases)
+-   Blog post 3 on R Consortium blog
+
+---
+
+### Milestone 4: Rust or C port of the Rd parser/converter (stretch goal)
+
+**Objective:** Rewrite the converter core in a compiled language. Rust
+is strongly preferred. C is the fallback for r-source acceptance.
+
+Performance is the goal of this milestone. Performance is achievable.
+But the proposal's primary thesis is infrastructure and robustness, not
+speed. M4 is therefore positioned as a stretch goal that builds on the
+foundation laid by M1 through M3.
+
+**Why.** A compiled core brings faster Rd parsing, better integration
+with the Typst Rust crate directly, and eliminates R-side parsing
+overhead. It also opens the door to a `typst` Rust crate integration
+that could render Typst documents without shelling out to a binary.
+
+**Important caveat.** Rust and Cargo are still under evaluation by
+R-core for inclusion in the official R build toolchain. See the open
+Bugzilla discussion at
+<https://bugs.r-project.org/show_bug.cgi?id=18669>. This milestone
+may be implemented as a standalone CRAN package (`rd2typst` or similar)
+rather than upstreamed, depending on R-core's stance at the time. The
+Milestones 1, 2, and 3 deliverables are unaffected by this concern.
+They are pure-R and do not depend on Rust or Cargo.
+
+This milestone is explicitly marked as a **stretch goal**. It is lower
+priority and lower cost. It will be pursued only after Milestones 1
+through 3 are complete.
+
+**Deliverables:**
+
+-   Working Rust or C port of the Rd converter core
+-   Benchmarks comparing R-side vs. compiled-side parsing performance
+-   Packaging plan: r-source patch or standalone CRAN package, depending
+    on R-core's Rust/Cargo stance
+-   Blog post 4 (if completed)
+
+---
+
+## Assumptions
+
+1.  **Typst binary stability:** The Typst markup language has reached a
+    stable point (v0.11+). We assume no breaking syntax changes during
+    the project. The binary distribution model is stable.
+2.  **R-core engagement:** Milestone 2 depends on R-core willingness to
+    review and ultimately merge the patch. We will engage early (start
+    of Month 3) to surface any concerns before final implementation.
+3.  **CRAN policy:** We assume CRAN will accept packages whose PDF
+    manuals are generated by the Typst backend, provided output quality
+    is comparable to the LaTeX backend. We will verify this with CRAN
+    maintainers during Milestone 2.
+
+If any assumption proves false, we will communicate with the ISC
+immediately and adjust scope or timeline accordingly, prioritizing
+the highest-value deliverables.
+
+## External dependencies
+
+No new CRAN dependencies are introduced for the core implementation.
+All work happens inside base R's `tools` package. Runtime dependency:
+the `typst` binary (Apache-2.0 licensed), obtained from the system PATH
+or downloaded on demand. Testing dependencies: a sample of CRAN packages
+used for validation (no new package imports required).
+
+## Technical concerns
+
+Rust and Cargo are still under evaluation by R-core for inclusion in
+the official R build toolchain. The trajectory for Rust in the broader
+Linux ecosystem is clear: Rust adoption is ongoing at the kernel level,
+in coreutils replacements, in sudo-rs, and in systemd components. The
+open R Bugzilla discussion is at
+<https://bugs.r-project.org/show_bug.cgi?id=18669>.
+
+This concern affects only Milestone 4 (the Rust/C port). Milestones 1,
+2, and 3 are pure-R and unaffected. If R-core declines Rust at the time
+of upstream, Milestone 4 ships as a standalone CRAN package instead.
+
+## Failure modes and recovery
+
+1.  **Typst syntax changes:** Typst releases a breaking change.
+    Recovery: pin to a tested Typst version; update when stable.
+2.  **Math translation complexity:** Converting LaTeX math to Typst math
+    proves intractable for general Rd.
+    Recovery: ship a `\if{typst}{...}` opt-in convention. Document LaTeX
+    math as a known limitation. Provide a passthrough mode.
+3.  **R-core does not merge:** Patch is deferred or rejected.
+    Recovery: ship as a standalone CRAN package (`rd2typst`) that patches
+    `tools::Rd2pdf` at load time, similar to how `tinytex` augments the
+    LaTeX path. The functional value is delivered regardless.
+4.  **Milestone 4 Rust rejected by R-core:** Ship as a standalone CRAN
+    package instead of an r-source patch.
+5.  **Timeline slippage:** Milestones 1 to 2 exceed budget.
+    Recovery: Milestone 3 and Milestone 4 are independent and can be
+    deferred. Milestones 1 and 2 deliver the core technical value.

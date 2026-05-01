@@ -1,0 +1,65 @@
+# Executive Summary
+
+```{=html}
+<!--
+This section provides a condensed view of the entire proposal, one page long.
+It should be a comprehensive high-level overview that captures the essence of
+the proposal, including its goals, methods, expected outcomes, deliverables, and budget.
+-->
+```
+
+We propose **Rd2typst**: a Typst-based Rd converter for R's documentation
+system. This proposal requests \$7,000 to complete it, validate it
+against the full CRAN corpus, and upstream it into r-source. Integration
+into `R CMD Rd2pdf --backend=typst` is the primary deliverable of
+Milestone 2.
+
+**Why Typst?** Typst is a modern typesetting engine, not just a LaTeX
+replacement. The Typst project built its own PDF renderer, SVG renderer,
+font handling, and package system from scratch. The result is a toolchain
+with very few moving parts: one static binary, no external system
+dependencies, and a permissive package ecosystem. Typst packages use
+permissive licenses. R-core can embed a complete Typst template, fonts,
+and any required Typst packages directly into r-source. No CTAN-equivalent
+fragility. No user-side configuration. R ships with everything it needs.
+
+Typst now offers modern HTML output with native equation and bibliography
+typesetting. The R community pioneered reproducible scientific writing
+(Sweave, knitr, R Markdown, Quarto). Adopting Typst as the documentation
+engine is the next step in that legacy.
+
+**Why now?** The existing LaTeX path depends on a working TeX Live or
+MiKTeX install: 1 to 4 GB, slow on CI runners, and brittle on minimal
+systems. CTAN package version drift is a recurring source of `R CMD check`
+failures. A Typst-based path eliminates this class of failure entirely.
+
+**What exists already.** A working implementation of `Rd2typst` exists
+in a fork of r-source. It handles the complete set of Rd tags. All 14
+base R packages compile end-to-end with `--backend=typst`. A 21-case
+test suite, man pages, and CLI integration (`R CMD Rdconv -t typst`,
+`R CMD Rd2pdf --backend=typst`) are already in place. A benchmark across
+257 help pages shows the Typst pipeline is 1.9x faster than `pdflatex`
+as a side effect of single-pass compilation. Speed is not the pitch.
+The pitch is infrastructure: no CTAN drift, embedded fonts and packages,
+no multi-gigabyte TeX installation, reproducible output across platforms,
+and a clean `R CMD check` experience.
+
+**Four milestones over 6 to 12 months:**
+
+1.  **Milestone 1 - CRAN-wide validation (\$2,500):** Run `Rd2typst`
+    against all of CRAN (~6,000 packages). Fix failures. Publish a
+    CRAN-wide pass-rate dashboard. Expand the benchmark corpus.
+2.  **Milestone 2 - Production integration: Rd2typst in `R CMD Rd2pdf`,
+    embedded in r-source (\$2,500):** Ship a self-contained Typst
+    template (`Rd.typ`, fonts, packages) inside `share/typst/` of
+    r-source. Implement `typst_binary()`. CI matrix on Windows, macOS,
+    Linux. Submit r-source patch to r-devel.
+3.  **Milestone 3 - Rd2md for LLM consumption (\$1,250):** Add
+    `R CMD Rdconv -t md`. Markdown is the universal format for feeding
+    documentation to coding-assistant models. Every CRAN package gains
+    a clean Markdown export of its help pages.
+4.  **Milestone 4 - Rust/C port of the Rd converter (\$750, stretch
+    goal):** Rewrite the converter core in a compiled language for
+    faster parsing and direct Typst crate integration.
+
+**Total: \$7,000.**

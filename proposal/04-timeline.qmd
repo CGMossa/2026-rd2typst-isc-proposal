@@ -1,0 +1,203 @@
+# Project plan
+
+## Start-up phase
+
+The `Rd2typst` project has a substantial head-start: a working
+converter, a test suite, a benchmark harness, and a fork of r-source
+already exist. The start-up phase is minimal.
+
+**Existing infrastructure:**
+
+-   Working `Rd2typst()` converter (700 lines, r-source fork). All 14
+    base packages compile end-to-end.
+-   `R CMD Rdconv -t typst` and `R CMD Rd2pdf --backend=typst` wired
+    through the toolchain.
+-   `typst_compile()` wrapper utility in `utils.R`.
+-   Shared `RdConv2.R` parsing layer with `"typst"` registered as an
+    Rd conditional format.
+-   21-case unit test suite (smoke test on all base Rd pages plus
+    structural, inline, list, table, link, conditional, escaping, and
+    dots cases).
+-   Benchmark harness measuring 1.9x end-to-end speedup over `pdflatex`
+    across 257 help pages.
+-   Phase A man pages (`Rd2HTML.Rd`, `typst_compile.Rd`, `RdUtils.Rd`).
+-   GitHub repository for the proposal.
+
+**No setup needed for:**
+
+-   Collaboration platform (GitHub already in use)
+-   License (GPL-2 consistent with r-source)
+-   Reporting framework (quarterly blog posts to R Consortium)
+
+**Initial work (Week 1):**
+
+-   Confirm Typst version to target (currently at least 0.11)
+-   Identify CRAN packages for the Milestone 1 validation corpus
+-   Open r-devel discussion thread to gauge R-core interest early
+
+The project can begin immediately upon funding approval.
+
+## Technical delivery
+
+All implementation work targets `src/library/tools/R/` in r-source (and
+the proposal's r-source fork). Development follows R's established
+contribution patterns:
+
+1.  Feature branches with test coverage
+2.  Self-review plus community feedback via GitHub
+3.  Merge to proposal fork and prepare r-source patch
+4.  Test with a CRAN package corpus on Windows, macOS, and Linux
+5.  Submit patch to R-core; announce on r-devel mailing list
+
+The overall project targets a **6 to 12 month duration** from funding
+approval to final milestone delivery.
+
+---
+
+**Milestone 1: CRAN-wide validation**
+
+-   **Months:** 1 to 3
+-   **Cost:** \$2,500
+-   **Work:** CRAN-wide validation run and triage (approximately 3
+    weeks), bug fixes for failures found (approximately 2 weeks), math
+    rendering improvements for `\eqn`/`\deqn` (approximately 2 weeks),
+    `.pkg2typst()` document assembler with table of contents and index
+    (approximately 2 weeks), S4/R5 method documentation verification
+    (approximately 1 week), expanded test suite to at least 50 cases
+    (approximately 1 week), public pass-rate dashboard and updated
+    benchmark report (approximately 1 week).
+-   **Payment trigger:** CRAN-wide pass-rate report published.
+    Test suite at 50+ cases. Blog post 1 submitted to R Consortium.
+
+---
+
+**Milestone 2: Production integration: Rd2typst in `R CMD Rd2pdf`, embedded in r-source**
+
+-   **Months:** 3 to 6
+-   **Cost:** \$2,500
+-   **Work:** Implement `typst_binary()` with PATH lookup, vendored
+    binary support, and opt-in auto-download (approximately 2 weeks).
+    Design and implement `Rd.typ` stylesheet (approximately 2 weeks).
+    Bundle Inconsolata and any required Typst packages into
+    `share/typst/` (approximately 1 week). Verify TeX-Live-free
+    operation on minimal Docker images (approximately 1 week).
+    Cross-platform CI matrix (approximately 1 week). Produce clean
+    r-source patch against r-devel including `NEWS` and `man` updates
+    (approximately 2 weeks). R-core engagement and feedback integration
+    (approximately 2 weeks). Blog post 2 (approximately 0.5 weeks).
+-   **Payment trigger:** `R CMD Rd2pdf --backend=typst` produces a valid
+    PDF on Windows, macOS, and Linux without a TeX Live installation.
+    CI green. r-source patch submitted to r-devel or Bugzilla. Blog post
+    2 submitted.
+
+---
+
+**Milestone 3: Rd2md for LLM consumption**
+
+-   **Months:** 6 to 9
+-   **Cost:** \$1,250
+-   **Work:** Implement `Rd2md.R` Markdown emitter (approximately 2
+    weeks). Wire `R CMD Rdconv -t md` through `RdConv2.R`
+    (approximately 1 week). Write test suite of at least 20 cases
+    (approximately 1 week). LLM context-window validation pass
+    (approximately 0.5 weeks). Blog post 3 (approximately 0.5 weeks).
+-   **Payment trigger:** `R CMD Rdconv -t md` produces valid Markdown
+    for all base R packages. Test suite green. Blog post 3 submitted.
+
+---
+
+**Milestone 4: Rust or C port of the Rd converter (stretch goal)**
+
+-   **Months:** 9 to 12 (if scope allows)
+-   **Cost:** \$750
+-   **Work:** Design the compiled-language interface (approximately 1
+    week). Implement the Rust port of the Rd parser and converter core
+    (approximately 4 weeks). Benchmark compiled vs. R-side performance
+    (approximately 1 week). Produce packaging plan: r-source patch or
+    standalone CRAN package (approximately 1 week). Blog post 4
+    (approximately 0.5 weeks).
+-   **Payment trigger:** Working port compiles the base R package corpus
+    with equivalent output to the R implementation. Benchmarks
+    published. Packaging plan documented.
+
+---
+
+## Other aspects
+
+### Open source and accessibility
+
+-   **License:** GPL-2 (consistent with r-source; proposal repo under
+    CC-BY 4.0)
+-   **Repository:** The Rd2typst implementation lives in an r-source
+    fork. The r-source patch will be prepared from that fork and
+    submitted to r-devel.
+-   **Typst binary:** Apache-2.0 license; distributed by the Typst
+    project at <https://github.com/typst/typst/releases>
+-   **Standalone fallback:** If upstream integration is delayed, the
+    converter will be published as a CRAN package so R users can benefit
+    immediately
+
+### Community engagement and publicity
+
+**Blog posts on R Consortium blog:**
+
+1.  **Month 3:** "Rd2typst: CRAN-wide validation results and what we
+    found." Introduces the converter, shows CRAN pass-rate results,
+    invites testing.
+2.  **Month 6:** "Rd2pdf gets a Typst backend: self-contained, no LaTeX
+    required." Demonstrates the `--backend=typst` flag, embedded
+    template, and setup instructions.
+3.  **Month 9:** "Rd2md: Markdown help pages for LLMs and RAG
+    pipelines." Introduces the Markdown emitter and use cases.
+4.  **Month 12 (if M4 complete):** "Rd2typst in Rust: a compiled core
+    for R's documentation pipeline."
+
+**Additional channels:**
+
+-   Social media announcements (Mastodon, Bluesky, LinkedIn) at each
+    milestone
+-   Presentation at useR! 2026 or posit::conf 2026 (if timing aligns)
+-   Post to r-devel mailing list at Milestone 2 and Milestone 3
+-   Engagement with R developers whose packages currently fail
+    `R CMD check` due to LaTeX issues
+
+## Budget and funding plan
+
+**Total funding requested: \$7,000**
+
+All funding will be allocated to labor costs for development by Mossa
+Merhi Reimert. No indirect costs, travel, or hardware are included.
+
+**Milestone 1: CRAN-wide validation: \$2,500**
+
+-   **Deliverables:** Updated `Rd2typst.R` with CRAN validation fixes.
+    `.pkg2typst()` assembler. Expanded test suite (at least 50 cases).
+    Public CRAN-wide pass-rate dashboard. Updated benchmark report.
+    Blog post 1.
+-   **Payment trigger:** Pass-rate report published. Test suite at 50+
+    cases. Blog post 1 submitted to R Consortium.
+
+**Milestone 2: Production integration: Rd2typst in `R CMD Rd2pdf`, embedded in r-source: \$2,500**
+
+-   **Deliverables:** `typst_binary()` with binary management.
+    `Rd.typ` stylesheet. Embedded fonts and Typst packages in
+    `share/typst/`. TeX-Live-free operation verified. CI matrix
+    (Windows, macOS, Linux). r-source patch submitted to r-devel.
+    `NEWS` and `man` updates. Blog post 2.
+-   **Payment trigger:** `R CMD Rd2pdf --backend=typst` produces a
+    CRAN-clean PDF on Windows, macOS, and Linux without TeX Live. CI
+    green. Patch submitted. Blog post 2 submitted.
+
+**Milestone 3: Rd2md for LLM consumption: \$1,250**
+
+-   **Deliverables:** `Rd2md.R` converter. `R CMD Rdconv -t md` wired
+    into the toolchain. Test suite (at least 20 cases). Blog post 3.
+-   **Payment trigger:** `R CMD Rdconv -t md` works for all base R
+    packages. Test suite green. Blog post 3 submitted.
+
+**Milestone 4: Rust or C port (stretch goal): \$750**
+
+-   **Deliverables:** Working compiled port. Benchmarks. Packaging plan
+    (r-source patch or CRAN package). Blog post 4.
+-   **Payment trigger:** Port produces equivalent output to the R
+    implementation for the base R corpus. Benchmarks published.
