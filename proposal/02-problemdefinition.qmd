@@ -147,3 +147,12 @@ the wider CRAN corpus, handling Typst binary distribution across
 platforms in a CRAN-acceptable way, polishing the output layout to match
 R's documentation conventions, embedding a fully self-contained template
 into r-source, and shepherding the patch through R-core review.
+
+## A note on R-core engagement
+
+This proposal targets changes to base R's `tools` package. A letter of
+support from an R-core member is not yet attached. The patch path will
+be opened with r-devel discussion early in Milestone 2, giving R-core
+ample time to review and shape the work. The standalone CRAN-package
+fallback (see Failure modes) ensures the deliverables reach R users
+regardless of upstream timing.

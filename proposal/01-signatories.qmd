@@ -51,3 +51,31 @@ marshalled into extendr proper.
 No follow-up funding was requested in the interim. The intent was to
 complete the full extendr OOP proposal before returning to the ISC.
 
+## Contributors
+
+```{=html}
+<!--
+Who are the people who have actively helped with this proposal but
+won't necessarily be on the core project team later?
+-->
+```
+
+None at this stage. The proposal will be circulated for community
+feedback prior to submission, and any contributors will be listed here
+in the final version.
+
+## Consulted
+
+```{=html}
+<!--
+Who has been given the opportunity to provide feedback on the
+proposal? This should include any R Consortium & ISC members who the
+proposal has been discussed with.
+-->
+```
+
+The proposal will be circulated to R-core members on the r-devel
+mailing list and to ISC members for early feedback ahead of submission.
+Names of consultees, and any letter of support from an R-core member,
+will be appended here.
+
