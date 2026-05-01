@@ -37,6 +37,5 @@ bibliography: references.bib
 
 {{< include proposal/06-acknowledgements.qmd >}}
 
-# References
 ::: refs
 :::
