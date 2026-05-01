@@ -7,6 +7,14 @@ thorough understanding going in of what the risks are to delivery
 -->
 ```
 
+## Definition of done
+
+```{=html}
+<!--
+What does success look like?
+-->
+```
+
 The project will be considered complete when all milestones deliver the
 following concrete, measurable outcomes.
 
@@ -69,9 +77,6 @@ following concrete, measurable outcomes.
     packages
 -   `R CMD Rdconv -t md` wired through `RdConv2.R`
 -   At least 20 test cases
--   Output validates against an LLM context-window test: a
-    representative help page parses without encoding artifacts or broken
-    structure in a standard context window
 
 **Documentation:**
 
@@ -110,7 +115,7 @@ The project will be considered complete when:
 | Embedded template self-contained     | Works on TeX-Live-free Docker image | CI on minimal images      |
 | CRAN packages validated end-to-end   | at least 5           | Validation report                        |
 | End-to-end speedup vs. LaTeX         | at least 1.9x        | Benchmark report (baseline already met)  |
-| Rd2md output validates               | Parses in LLM context window without errors | Manual + automated test |
+| Rd2md base R coverage                | All 14 packages      | Test file                                |
 | Blog posts                           | 3 (4 if M4 complete) | R Consortium blog                        |
 | r-source patch submitted             | Yes                  | r-devel post or Bugzilla ticket          |
 | Rust/C port completed                | Optional             | Completed if scope allows                |

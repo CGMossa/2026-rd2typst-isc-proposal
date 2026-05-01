@@ -12,6 +12,16 @@ This is where the proposal should be outlined.
 
 ## Overview
 
+```{=html}
+<!--
+At a high-level address what your proposal is and how it will address
+the problem identified. Highlight any benefits to the R Community that
+follow from solving the problem.
+
+Include concrete actions you will take and estimated timeline.
+-->
+```
+
 We propose to complete the `Rd2typst` converter, integrate it as a
 first-class backend in `tools::Rd2pdf`, and prepare it for upstream
 submission to R-core. Work is structured as four milestones over
@@ -20,7 +30,39 @@ Together they produce a fully functional, Comprehensive R Archive Network (CRAN)
 the LaTeX PDF rendering pipeline, a Markdown export path for LLM
 consumption, and a compiled-language foundation for future performance.
 
-The high-level architecture is:
+## Detail
+
+```{=html}
+<!--
+Go into more detail about the specifics of the project and how it
+delivers against the problem.
+-->
+```
+
+### Minimum Viable Product
+
+```{=html}
+<!--
+What is the smallest thing you can build that delivers value to your
+users?
+-->
+```
+
+Milestones 1 and 2 together constitute the Minimum Viable Product.
+Together they deliver `R CMD Rd2pdf --backend=typst` as a working,
+CRAN-validated, TeX-Live-free PDF backend for R help files. Even if
+Milestones 3 and 4 are not pursued, the MVP alone replaces the LaTeX
+dependency for the entire R documentation pipeline. Milestone 3
+(`Rd2md` for LLM consumption) and Milestone 4 (compiled-language port)
+build on the MVP foundation but are independently scoped.
+
+### Architecture
+
+```{=html}
+<!--
+What does the high-level architecture look like?
+-->
+```
 
 ```
 tools package (base R)
@@ -39,7 +81,7 @@ tools package (base R)
 ```
 
 <!-- Source commits: e2e8480a29, ea2f24352b, 2e9789d759 -->
-### What is already done
+#### What is already done
 
 The existing implementation covers:
 
@@ -262,7 +304,14 @@ through 3 are complete.
 
 ---
 
-## Assumptions
+### Assumptions
+
+```{=html}
+<!--
+What assumptions are you making that, if proven false, would invalidate
+the project?
+-->
+```
 
 1.  **Typst feature stability**: The Typst features required for R
     documentation rendering have already landed and are unlikely to
@@ -283,7 +332,14 @@ If any assumption proves false, we will communicate with the ISC
 immediately and adjust scope or timeline accordingly, prioritizing
 the highest-value deliverables.
 
-## External dependencies
+### External dependencies
+
+```{=html}
+<!--
+What external dependencies does the project have (e.g. libraries,
+services, other projects, etc.)?
+-->
+```
 
 No new CRAN dependencies are introduced for the core implementation.
 All work happens inside base R's `tools` package. Runtime dependency:
