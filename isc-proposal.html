@@ -2322,6 +2322,7 @@ It is important to cover:
 <p>Typst’s package ecosystem uses permissive licenses. R-core can embed a full Typst template, fonts, and any required Typst packages directly into r-source. There is no Comprehensive TeX Archive Network (CTAN)-equivalent fragility. There is no user-side configuration. R ships with everything it needs.</p>
 <p>Typst now offers modern HTML output with native typesetting of equations and bibliographies. The R community pioneered reproducible scientific writing: Sweave, knitr, R Markdown, Quarto. Adopting Typst as the documentation engine is the next generation of that legacy.</p>
 <p>Typst currently offers experimental HTML support. It will be the engine for modern HTML output of R documentation in the future.</p>
+<p>The R community has already begun integrating Typst from several angles. Joseph Barbier’s <a href="https://github.com/y-sunflower/r2typ"><code>r2typ</code></a> provides a Typst runner for R. Baptiste Auguié’s <a href="https://baptiste.codeberg.page/gridcetz/"><code>gridcetz</code></a> is an early Typst-backed graphics device for R. This proposal addresses the documentation pipeline, complementing those efforts. See the Acknowledgements at the end of this proposal.</p>
 </section>
 <section id="the-latex-dependency-is-cumbersome-for-end-users" class="level2">
 <h2 class="anchored" data-anchor-id="the-latex-dependency-is-cumbersome-for-end-users">The LaTeX dependency is cumbersome for end-users</h2>
@@ -2857,6 +2858,13 @@ What does success look like?
 <p>The <code>rd2typst</code> CRAN package will be published under the MIT license, so any community member can inherit, fork, fold into their own package, or otherwise build on this work without friction. Code that lands in r-source follows R’s standard GPL-2 license. Either way, the implementation is openly available: any R developer can use and improve the Typst backend, the work is not locked to a single maintainer or organization, and the patch path and the CRAN-package path both produce a permanent open-source artifact for the community.</p>
 </section>
 </section>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>This proposal builds on a growing body of community work using Typst with R. The author thanks the following contributors whose work has informed and inspired this project.</p>
+<p><strong>Kenneth Blake Vernon</strong> (<a href="https://www.kbvernon.io/" class="uri">https://www.kbvernon.io/</a>) for his ISC proposal on community-focused development for scientific computing with Rust and R at <a href="https://github.com/kbvernon/isc-rextendr-proposal" class="uri">https://github.com/kbvernon/isc-rextendr-proposal</a>. That proposal has shaped thinking about how ISC grants and developer tooling for R and Rust fit together.</p>
+<p><strong>Joseph Barbier</strong> for the <a href="https://github.com/y-sunflower/r2typ"><code>r2typ</code></a> R package, a Typst runner for R, and for cultivating a Typst-users-in-R community at <a href="https://y-sunflower.github.io/r2typ/" class="uri">https://y-sunflower.github.io/r2typ/</a>. r2typ demonstrates the practical viability of Typst-based R workflows. It is direct inspiration for taking the integration further into R’s documentation system.</p>
+<p><strong>Baptiste Auguié</strong> for <a href="https://baptiste.codeberg.page/gridcetz/"><code>gridcetz</code></a>, an early effort to build a Typst-backed graphics device for R. gridcetz shows the direction R and Typst can grow in beyond documentation rendering.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
