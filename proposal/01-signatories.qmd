@@ -39,11 +39,15 @@ to the project.
 
 ## Prior ISC funding
 
-Mossa received an ISC grant for the extendr Object-Oriented Programming (OOP) project (vctrs/S3, S7,
-and R6 support for extendr bindings). All deliverables promised in that
-proposal, including work beyond what was directly funded, are now in
-production in **[miniextendr](https://a2-ai.github.io/miniextendr/)** (a separate package). They are currently
-undergoing user testing before being marshalled into extendr proper.
+Mossa received an ISC grant for the extendr Object-Oriented Programming
+(OOP) project: vctrs/S3, S7, and R6 support for extendr bindings.
+**The entire scope of that proposal has been implemented**, not only
+the funded milestones. The work is in production in
+**[miniextendr](https://a2-ai.github.io/miniextendr/)** (a separate
+package), with the full set of class systems documented at
+<https://a2-ai.github.io/miniextendr/manual/class-systems/>.
+miniextendr is currently undergoing user testing before being
+marshalled into extendr proper.
 No follow-up funding was requested in the interim. The intent was to
 complete the full extendr OOP proposal before returning to the ISC.
 
