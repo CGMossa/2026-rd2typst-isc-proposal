@@ -30,6 +30,20 @@ Together they produce a fully functional, Comprehensive R Archive Network (CRAN)
 the LaTeX PDF rendering pipeline, a Markdown export path for LLM
 consumption, and a compiled-language foundation for future performance.
 
+`R CMD` already ships a small family of Rd converters:
+
+```
+Rdconv     Convert Rd format to various other formats
+Rd2pdf     Convert Rd format to PDF
+Rd2txt     Convert Rd format to pretty text
+```
+
+This proposal adds two more: **`Rd2typst`** (or **`Rd2typ`** for
+alignment with the `Rd2pdf` / `Rd2txt` naming convention; final name
+to be agreed with R-core) and **`Rd2md`**. Both fit naturally into the
+existing tooling surface and do not require new R CMD entry points
+beyond the established pattern.
+
 ## Detail
 
 ```{=html}
