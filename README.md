@@ -6,6 +6,14 @@ This repository contains the R Consortium ISC grant proposal for **Rd2typst**,
 a Typst-based Rd converter for R's documentation system. Integration into
 `R CMD Rd2pdf --backend=typst` is one of its deliverables.
 
+**Read the proposal:** <https://CGMossa.github.io/2026-rd2typst-isc-proposal/>
+([rendered Markdown](isc-proposal.html.md))
+
+`R CMD` already ships `Rdconv`, `Rd2pdf`, and `Rd2txt`. This proposal
+contributes **`Rd2typst`** (or **`Rd2typ`** for naming-convention
+alignment, final name to be agreed with R-core) and **`Rd2md`** to that
+family.
+
 ## Project overview
 
 R's help system currently renders `.Rd` documentation to PDF exclusively via
@@ -37,8 +45,9 @@ funds four milestones:
     Linux. Submit the r-source patch to r-devel.
 3.  **Milestone 3 - Rd2md for LLM consumption (\$1,250):** Add
     `R CMD Rdconv -t md`. Deliver a Markdown export of R help pages for
-    retrieval-augmented generation, coding-assistant context, and
-    documentation MCP servers.
+    Retrieval-Augmented Generation (RAG), coding-assistant context
+    (Claude, Codex, Qwen Code, Llama), and documentation Model Context
+    Protocol (MCP) servers.
 4.  **Milestone 4 - Rust/C port (stretch goal, \$750):** Rewrite the
     converter core in a compiled language for faster parsing and direct
     Typst crate integration. Ships as an r-source patch or standalone
@@ -60,24 +69,20 @@ by the proposal:
 
 ## Building the proposal
 
-Render `isc-proposal.qmd` to build the document locally:
-
-```r
-quarto::quarto_render("isc-proposal.qmd")
+```sh
+quarto render isc-proposal.qmd               # builds HTML + kept-md
+sudo quarto render isc-proposal.qmd --to hikmah-pdf   # builds the submission PDF
 ```
+
+The PDF render needs the `preprint` (for `\usepackage{fullpage}`),
+`microtype`, and `xurl` LaTeX collections; `tlmgr` will install them on
+first run, hence `sudo`.
 
 ### Automatically render via GitHub Actions
 
-This repository comes with a GitHub Actions workflow to automatically render
-the proposal to HTML and PDF on every push to `main`. To enable it, publish
-to GitHub Pages interactively the first time:
-
-```sh
-quarto publish gh-pages isc-proposal.qmd
-```
-
-After this, the action will run automatically. The rendered proposal is
-viewable at `https://CGMossa.github.io/2026-rd2typst-isc-proposal/`.
+A GitHub Actions workflow renders the proposal to HTML on every push to
+`main` and publishes to the `gh-pages` branch. The rendered output is
+served at <https://CGMossa.github.io/2026-rd2typst-isc-proposal/>.
 
 ## License
 

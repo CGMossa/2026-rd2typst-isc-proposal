@@ -19,6 +19,9 @@ format:
     geometry:
       - left=1.25in
       - right=1.25in
+    include-in-header:
+      text: |
+        \usepackage{fullpage}
 bibliography: references.bib
 ---
 

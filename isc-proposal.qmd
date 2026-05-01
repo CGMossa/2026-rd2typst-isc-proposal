@@ -16,9 +16,12 @@ format:
     embed-resources: true
     keep-md: true
   hikmah-pdf:
-    geometry:
-      - left=1.25in
-      - right=1.25in
+    include-in-header:
+      text: |
+        \usepackage{fullpage}
+        \usepackage{microtype}
+        \usepackage{xurl}
+        \setlength{\emergencystretch}{3em}
 bibliography: references.bib
 ---
 
