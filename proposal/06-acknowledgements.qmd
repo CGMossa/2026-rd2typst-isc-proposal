@@ -1,0 +1,24 @@
+# Acknowledgements
+
+This proposal builds on a growing body of community work using Typst
+with R. The author thanks the following contributors whose work has
+informed and inspired this project.
+
+**Kenneth Blake Vernon** (<https://www.kbvernon.io/>) for his ISC
+proposal on community-focused development for scientific computing
+with Rust and R at <https://github.com/kbvernon/isc-rextendr-proposal>.
+That proposal has shaped thinking about how ISC grants and developer
+tooling for R and Rust fit together.
+
+**Joseph Barbier** for the
+[`r2typ`](https://github.com/y-sunflower/r2typ) R package, a Typst
+runner for R, and for cultivating a Typst-users-in-R community at
+<https://y-sunflower.github.io/r2typ/>. r2typ demonstrates the
+practical viability of Typst-based R workflows. It is direct
+inspiration for taking the integration further into R's documentation
+system.
+
+**Baptiste Auguié** for
+[`gridcetz`](https://baptiste.codeberg.page/gridcetz/), an early
+effort to build a Typst-backed graphics device for R. gridcetz shows
+the direction R and Typst can grow in beyond documentation rendering.

@@ -35,6 +35,8 @@ bibliography: references.bib
 
 {{< include proposal/05-success.qmd >}}
 
+{{< include proposal/06-acknowledgements.qmd >}}
+
 # References
 ::: refs
 :::

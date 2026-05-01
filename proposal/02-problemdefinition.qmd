@@ -44,6 +44,14 @@ documentation engine is the next generation of that legacy.
 Typst currently offers experimental HTML support. It will be the engine
 for modern HTML output of R documentation in the future.
 
+The R community has already begun integrating Typst from several
+angles. Joseph Barbier's [`r2typ`](https://github.com/y-sunflower/r2typ)
+provides a Typst runner for R. Baptiste Auguié's
+[`gridcetz`](https://baptiste.codeberg.page/gridcetz/) is an early
+Typst-backed graphics device for R. This proposal addresses the
+documentation pipeline, complementing those efforts. See the
+Acknowledgements at the end of this proposal.
+
 ## The LaTeX dependency is cumbersome for end-users
 
 R's documentation system is one of its great strengths. Every function
