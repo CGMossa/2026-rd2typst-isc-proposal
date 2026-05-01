@@ -2248,7 +2248,7 @@ the proposal, including its goals, methods, expected outcomes, deliverables, and
 <p><strong>What exists already.</strong> A working implementation of <code>Rd2typst</code> exists in a fork of r-source. It handles the complete set of Rd tags. All 14 base R packages compile end-to-end with <code>--backend=typst</code>. A 21-case test suite, man pages, and Command-Line Interface (CLI) integration (<code>R CMD Rdconv -t typst</code>, <code>R CMD Rd2pdf --backend=typst</code>) are already in place. A benchmark across 257 help pages shows the Typst pipeline is 1.9x faster than <code>pdflatex</code> as a side effect of single-pass compilation. Speed is not the pitch. The pitch is infrastructure: no CTAN drift, embedded fonts and packages, no multi-gigabyte TeX installation, reproducible output across platforms, and a clean <code>R CMD check</code> experience.</p>
 <p><strong>Four milestones over 6 to 12 months:</strong></p>
 <ol type="1">
-<li><strong>Milestone 1 - CRAN-wide validation ($2,500):</strong> Run <code>Rd2typst</code> against all of CRAN (<a href="https://cran.r-project.org/web/packages/">23,734 packages as of writing</a>). Fix failures. Publish a CRAN-wide pass-rate dashboard. Expand the benchmark corpus.</li>
+<li><strong>Milestone 1 - CRAN-wide validation ($2,500):</strong> Run <code>Rd2typst</code> against all of CRAN (<a href="https://cran.r-project.org/web/packages/">23,734 packages as of writing</a>). Fix failures. Expand the benchmark corpus.</li>
 <li><strong>Milestone 2 - Production integration: Rd2typst in <code>R CMD Rd2pdf</code>, embedded in r-source ($2,500):</strong> Ship a self-contained Typst template (<code>Rd.typ</code>, fonts, packages) inside <code>share/typst/</code> of r-source. Implement <code>typst_binary()</code>. CI matrix on Windows, macOS, Linux. Submit r-source patch to r-devel.</li>
 <li><strong>Milestone 3 - Rd2md for LLM consumption ($1,250):</strong> Add <code>R CMD Rdconv -t md</code>. Markdown is the universal format for feeding documentation to coding-assistant models. Every CRAN package gains a clean Markdown export of its help pages.</li>
 <li><strong>Milestone 4 - Rust/C port of the Rd converter ($750, stretch goal):</strong> Rewrite the converter core in a compiled language for faster parsing and direct Typst crate integration.</li>
@@ -2437,7 +2437,6 @@ What does the high-level architecture look like?
 <li><strong>Expanded test corpus:</strong> Add test cases for edge cases found in the wild. Target at least 50 test cases total.</li>
 <li><strong>Math rendering:</strong> Improve <code>\eqn</code>/<code>\deqn</code> handling. Translate common LaTeX math constructs to Typst’s native math mode where possible (subscripts, superscripts, Greek letters, fractions).</li>
 <li><strong>Package index assembler:</strong> Implement <code>.pkg2typst()</code> to concatenate all help pages into a single <code>.typ</code> file with a table of contents and index.</li>
-<li><strong>Public dashboard:</strong> Publish a CRAN-wide pass-rate report. Format: a static page or GitHub Gist updated with each run.</li>
 <li><strong>Updated benchmark:</strong> Extend the existing benchmark beyond base R to the full CRAN corpus.</li>
 </ol>
 <p><strong>Deliverables:</strong></p>
@@ -2445,7 +2444,6 @@ What does the high-level architecture look like?
 <li>Updated <code>Rd2typst.R</code> with fixes from CRAN-wide testing</li>
 <li><code>.pkg2typst()</code> function assembling a complete per-package Typst document</li>
 <li>Expanded test suite (at least 50 test cases) covering edge cases found in the wild</li>
-<li>Public CRAN-wide pass-rate dashboard or report</li>
 <li>Updated benchmark report across the full CRAN corpus</li>
 <li>Blog post 1 on R Consortium blog</li>
 </ul>
@@ -2601,8 +2599,8 @@ services, other projects, etc.)?
 <ul>
 <li><strong>Months:</strong> 1 to 3</li>
 <li><strong>Cost:</strong> $2,500</li>
-<li><strong>Work:</strong> CRAN-wide validation run and triage (approximately 3 weeks), bug fixes for failures found (approximately 2 weeks), math rendering improvements for <code>\eqn</code>/<code>\deqn</code> (approximately 2 weeks), <code>.pkg2typst()</code> document assembler with table of contents and index (approximately 2 weeks), S4/R5 method documentation verification (approximately 1 week), expanded test suite to at least 50 cases (approximately 1 week), public pass-rate dashboard and updated benchmark report (approximately 1 week).</li>
-<li><strong>Payment trigger:</strong> CRAN-wide pass-rate report published. Test suite at 50+ cases. Blog post 1 submitted to R Consortium.</li>
+<li><strong>Work:</strong> CRAN-wide validation run and triage (approximately 3 weeks), bug fixes for failures found (approximately 2 weeks), math rendering improvements for <code>\eqn</code>/<code>\deqn</code> (approximately 2 weeks), <code>.pkg2typst()</code> document assembler with table of contents and index (approximately 2 weeks), S4/R5 method documentation verification (approximately 1 week), expanded test suite to at least 50 cases (approximately 1 week), updated benchmark report (approximately 1 week).</li>
+<li><strong>Payment trigger:</strong> CRAN-wide validation run completed and bug fixes merged. Test suite at 50+ cases. Blog post 1 submitted to R Consortium.</li>
 </ul>
 <hr>
 <p><strong>Milestone 2: Production integration: Rd2typst in <code>R CMD Rd2pdf</code>, embedded in r-source</strong></p>
@@ -2665,8 +2663,8 @@ services, other projects, etc.)?
 <p>All funding will be allocated to labor costs for development by Mossa Merhi Reimert. No indirect costs, travel, or hardware are included.</p>
 <p><strong>Milestone 1: CRAN-wide validation: $2,500</strong></p>
 <ul>
-<li><strong>Deliverables:</strong> Updated <code>Rd2typst.R</code> with CRAN validation fixes. <code>.pkg2typst()</code> assembler. Expanded test suite (at least 50 cases). Public CRAN-wide pass-rate dashboard. Updated benchmark report. Blog post 1.</li>
-<li><strong>Payment trigger:</strong> Pass-rate report published. Test suite at 50+ cases. Blog post 1 submitted to R Consortium.</li>
+<li><strong>Deliverables:</strong> Updated <code>Rd2typst.R</code> with CRAN validation fixes. <code>.pkg2typst()</code> assembler. Expanded test suite (at least 50 cases). Updated benchmark report. Blog post 1.</li>
+<li><strong>Payment trigger:</strong> CRAN-wide validation run completed and fixes merged. Test suite at 50+ cases. Blog post 1 submitted to R Consortium.</li>
 </ul>
 <p><strong>Milestone 2: Production integration: Rd2typst in <code>R CMD Rd2pdf</code>, embedded in r-source: $2,500</strong></p>
 <ul>
@@ -2709,7 +2707,6 @@ What does success look like?
 </ul>
 <p><strong>Documentation:</strong></p>
 <ul>
-<li>Public CRAN-wide pass-rate dashboard or report</li>
 <li>Updated benchmark extending the existing 257-page, 1.9x-faster baseline to the full CRAN corpus</li>
 </ul>
 </section>
